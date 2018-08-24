@@ -27,7 +27,7 @@ public class Demo1 : MonoBehaviour
         panRecognizer.gestureRecognizedEvent += r =>
         {
             Debug.Log("Pan : " + r);
-            demoCamera.Rotate(-r.deltaPosition.x * 0.1f);
+            demoCamera.Rotate(-(r.deltaPosition) * 0.1f);
         };
 
         panRecognizer.gestureEndEvent += r =>

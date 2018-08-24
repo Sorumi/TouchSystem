@@ -16,17 +16,6 @@ public abstract class AbstractRecognizer : IComparable<AbstractRecognizer>
     public uint zIndex = 0;
     public RecognizerState state = RecognizerState.Possible;
     protected List<TSTouch> tracingTouches = new List<TSTouch>();
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     #region Public
 
