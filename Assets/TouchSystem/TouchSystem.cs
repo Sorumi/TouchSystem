@@ -140,11 +140,8 @@ public class TouchSystem : MonoBehaviour
     {
 
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER || UNITY_WEBGL
-
-        // we only need to process if we have some interesting input this frame
         if (Input.GetMouseButtonUp(0) || Input.GetMouseButton(0))
             touches.Add(touchesCache[0].updateByMouse());
-
 #endif
 
         if (Input.touchCount > 0)

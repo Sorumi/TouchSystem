@@ -16,10 +16,8 @@ public class TSTouch
     public TouchPhase phase = TouchPhase.Ended;
 
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER || UNITY_WEBGL
-    // used to track mouse movement and fake touches
     private Vector2? lastMousePosition;
     private double lastClickTime;
-    // private double _multipleClickInterval = 0.2;
 #endif
 
 
@@ -73,10 +71,18 @@ public class TSTouch
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER || UNITY_WEBGL
     public TSTouch populateWithPosition(Vector2 position, TouchPhase touchPhase)
     {
+        double clickTime = Time.time;
         if (lastMousePosition.HasValue)
+        {
             deltaPosition = position - lastMousePosition.Value;
+            deltaTime = (float)(clickTime - lastClickTime);
+        }
         else
+        {
             deltaPosition = new Vector2(0, 0);
+            deltaTime = 0.0f;
+        }
+        lastClickTime = clickTime;
 
         switch (touchPhase)
         {
@@ -99,6 +105,8 @@ public class TSTouch
                 lastMousePosition = null;
                 break;
         }
+
+        this.position = position;
 
         return this;
     }
