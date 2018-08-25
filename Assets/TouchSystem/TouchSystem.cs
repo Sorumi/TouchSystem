@@ -16,28 +16,28 @@ public class TouchSystem : MonoBehaviour
     private bool canRecognize = true;
 
 
-//     private const float inchesToCentimeters = 2.54f;
-//     public float ScreenPixelsPerCM
-//     {
-//         get
-//         {
-//             float fallbackDpi = 72f;
-// #if UNITY_ANDROID
-// 				// Android MDPI setting fallback
-// 				// http://developer.android.com/guide/practices/screens_support.html
-// 				fallbackDpi = 160f;
-// #elif (UNITY_WP8 || UNITY_WP8_1 || UNITY_WSA || UNITY_WSA_8_0)
-// 				// Windows phone is harder to track down
-// 				// http://www.windowscentral.com/higher-resolution-support-windows-phone-7-dpi-262
-// 				fallbackDpi = 92f;
-// #elif UNITY_IOS
-// 				// iPhone 4-6 range
-// 				fallbackDpi = 326f;
-// #endif
+    //     private const float inchesToCentimeters = 2.54f;
+    //     public float ScreenPixelsPerCM
+    //     {
+    //         get
+    //         {
+    //             float fallbackDpi = 72f;
+    // #if UNITY_ANDROID
+    // 				// Android MDPI setting fallback
+    // 				// http://developer.android.com/guide/practices/screens_support.html
+    // 				fallbackDpi = 160f;
+    // #elif (UNITY_WP8 || UNITY_WP8_1 || UNITY_WSA || UNITY_WSA_8_0)
+    // 				// Windows phone is harder to track down
+    // 				// http://www.windowscentral.com/higher-resolution-support-windows-phone-7-dpi-262
+    // 				fallbackDpi = 92f;
+    // #elif UNITY_IOS
+    // 				// iPhone 4-6 range
+    // 				fallbackDpi = 326f;
+    // #endif
 
-//             return Screen.dpi == 0f ? fallbackDpi / inchesToCentimeters : Screen.dpi / inchesToCentimeters;
-//         }
-//     }
+    //             return Screen.dpi == 0f ? fallbackDpi / inchesToCentimeters : Screen.dpi / inchesToCentimeters;
+    //         }
+    //     }
 
     void Awake()
     {
@@ -127,7 +127,8 @@ public class TouchSystem : MonoBehaviour
             return;
 
         instance.triggeRecognizer = null;
-        if (instance.canContinuousRecognize) {
+        if (instance.canContinuousRecognize)
+        {
             instance.canRecognize = true;
         }
     }
@@ -137,6 +138,15 @@ public class TouchSystem : MonoBehaviour
     #region Private
     private void updateTouches()
     {
+
+#if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER || UNITY_WEBGL
+
+        // we only need to process if we have some interesting input this frame
+        if (Input.GetMouseButtonUp(0) || Input.GetMouseButton(0))
+            touches.Add(touchesCache[0].updateByMouse());
+
+#endif
+
         if (Input.touchCount > 0)
         {
             int touchLength = Mathf.Min(Input.touchCount, maxTouches);

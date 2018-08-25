@@ -21,9 +21,6 @@ public class DemoCamera : MonoBehaviour
 
     private Camera camera;
 
-    public delegate void FloatDelegate(float value);
-    public FloatDelegate OnCameraRotate;
-
     // record
     private float rotateHorizontal = 0;
 
@@ -149,14 +146,9 @@ public class DemoCamera : MonoBehaviour
         cameraPosition.y = defaultPositionXZ * Mathf.Tan(rotateVerticalRad) + defaultPositionY;
         cameraPosition.y -= moveVertical;
 
-
         camera.transform.position = cameraPosition;
         camera.transform.eulerAngles = cameraRotation;
 
-        if (OnCameraRotate != null)
-        {
-            OnCameraRotate(moveDegree);
-        }
     }
 
 }

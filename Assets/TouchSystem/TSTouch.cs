@@ -15,6 +15,14 @@ public class TSTouch
 
     public TouchPhase phase = TouchPhase.Ended;
 
+#if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER || UNITY_WEBGL
+    // used to track mouse movement and fake touches
+    private Vector2? lastMousePosition;
+    private double lastClickTime;
+    // private double _multipleClickInterval = 0.2;
+#endif
+
+
     public TSTouch(int id)
     {
         fingerId = id;
@@ -39,6 +47,63 @@ public class TSTouch
 
         return this;
     }
+
+    public TSTouch updateByMouse()
+    {
+        // do we have some input to work with?
+        if (Input.GetMouseButtonUp(0) || Input.GetMouseButton(0))
+        {
+            var phase = TouchPhase.Moved;
+
+            // guard against down and up being called in the same frame
+            if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonUp(0))
+                phase = TouchPhase.Canceled;
+            else if (Input.GetMouseButtonUp(0))
+                phase = TouchPhase.Ended;
+            else if (Input.GetMouseButtonDown(0))
+                phase = TouchPhase.Began;
+
+            Vector2 position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            this.populateWithPosition(position, phase);
+        }
+
+        return this;
+    }
+
+#if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER || UNITY_WEBGL
+    public TSTouch populateWithPosition(Vector2 position, TouchPhase touchPhase)
+    {
+        if (lastMousePosition.HasValue)
+            deltaPosition = position - lastMousePosition.Value;
+        else
+            deltaPosition = new Vector2(0, 0);
+
+        switch (touchPhase)
+        {
+            case TouchPhase.Began:
+                phase = TouchPhase.Began;
+                lastMousePosition = position;
+                startPosition = position;
+                break;
+            case TouchPhase.Stationary:
+            case TouchPhase.Moved:
+                if (deltaPosition.sqrMagnitude == 0)
+                    phase = TouchPhase.Stationary;
+                else
+                    phase = TouchPhase.Moved;
+
+                lastMousePosition = position;
+                break;
+            case TouchPhase.Ended:
+                phase = TouchPhase.Ended;
+                lastMousePosition = null;
+                break;
+        }
+
+        return this;
+    }
+
+#endif
 
     public override string ToString()
     {
